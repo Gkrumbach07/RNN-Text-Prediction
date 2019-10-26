@@ -19,15 +19,19 @@ with open('texts.csv') as path_to_file:
 vocab = sorted(set(text))
 
 # Creating a mapping from unique words to indices
-word2idx = {}
-count = 0
+word2idx = {" ": 0}  # initialize with SPACE char and empty char
+count = 1
 for msg in vocab:
     for word in msg.split():
         if word not in word2idx:
             word2idx[word] = count
             count += 1
 
-idx2word = np.array(vocab)
+tmpary = []
+for i in word2idx:
+    tmpary.append(i)
+idx2word = np.array(tmpary)
+
 intary = []
 for msg in vocab:
     tmp = []
@@ -41,7 +45,7 @@ for i in intary:
     tmp = []
     for j in range(seq_length):
         if j > i.__len__() - 1:
-            tmp.append(-1)
+            tmp.append(0)
         else:
             tmp.append(i[j])
     text_as_int.append(tmp)
@@ -51,6 +55,9 @@ for i in intary:
 # Create training examples / targets
 char_dataset = tf.data.Dataset.from_tensor_slices(text_as_int)
 
+for i in char_dataset.take(30):
+  print(idx2word[i.numpy()])
+
 
 def split_input_target(chunk):
     input_text = chunk[:-1]
@@ -59,6 +66,7 @@ def split_input_target(chunk):
 
 
 dataset = char_dataset.map(split_input_target)
+
 
 for input_example, target_example in dataset.take(1):
   print ('Input data: ', repr(''.join(idx2word[input_example.numpy()])))
