@@ -75,6 +75,7 @@ for input_example, target_example in dataset.take(1):
 # Batch size
 BATCH_SIZE = 64
 
+
 # Buffer size to shuffle the dataset
 # (TF data is designed to work with possibly infinite sequences,
 # so it doesn't attempt to shuffle the entire sequence in memory. Instead,
@@ -107,7 +108,7 @@ def build_model(vocab_size, embedding_dim, rnn_units, batch_size):
 
 
 model = build_model(
-  vocab_size = len(text_as_int),
+  vocab_size=len(text_as_int),
   embedding_dim=embedding_dim,
   rnn_units=rnn_units,
   batch_size=BATCH_SIZE)
@@ -122,7 +123,7 @@ def loss(labels, logits):
   return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
 
 
-example_batch_loss  = loss(target_example_batch, example_batch_predictions)
+example_batch_loss = loss(target_example_batch, example_batch_predictions)
 print("Prediction shape: ", example_batch_predictions.shape, " # (batch_size, sequence_length, vocab_size)")
 print("scalar_loss:      ", example_batch_loss.numpy().mean())
 
@@ -153,7 +154,7 @@ def generate_text(model, start_string):
   # Evaluation step (generating text using the learned model)
 
   # Number of characters to generate
-  num_generate = 1000
+  num_generate = 10
 
   # Converting our start string to numbers (vectorizing)
   input_eval = [word2idx[s] for s in start_string]
@@ -186,4 +187,5 @@ def generate_text(model, start_string):
 
   return (start_string + ''.join(text_generated))
 
-print(generate_text(model, start_string=u"ROMEO: "))
+
+print(generate_text(model, start_string=u"What"))
